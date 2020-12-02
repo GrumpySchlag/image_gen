@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implementing hook_preprocess().
+ *
+ * @param array $variables
+ */
+function image_gen_preprocess_image(&$variables) {
+
+  dump("Hello");
+  dump(\Drupal::root());
+  dump($variables);
+  dump($variables['attributes']['src']);
+
+
+  if (!file_exists(\Drupal::root() . $variables['attributes']['src'])) {
+
+    $imagegen_config = \Drupal::config('image_gen.config');
+
+    if ($imagegen_config->get('image_field_replace') == 1) {
+
+      $url = Url::fromRoute('ImageGen.content',
+        [
+          'width' => $variables['width'] ? $variables['width'] : $imagegen_config->get('width'),
+          'height' => $variables['height'] ? $variables['height'] : $imagegen_config->get('height'),
+          'bg' => 'random',
+          'color' => 'random',
+          'type' => $imagegen_config->get('type'),
+          'text' => "Coucou",
+          // 'alt' => 'Image Generator',
+        ],
+        [
+          'absolute' => TRUE,
+        ]
+      );
+      
+      $variables['attributes']['src'] = $url->toString();
+    }
+  }
+}
+
+/**
+ * Implementing hook_preprocess().
+ *
+ * @param array $variables
+ */
+function image_gen_preprocess_field(&$variables) {
+
+  $imagegen_config = \Drupal::config('image_gen.config');
+
+  if ($imagegen_config->get('processed_text_image_replace') == 1) {
+
+    foreach ($variables['items'] as &$item) {
+      if ($item['content']['#type'] == "processed_text") {
+        $re = '/src=\"(.*)\.(jpg|png)\"/mi';
+        preg_match_all($re, $item['content']['#text'], $matches, PREG_SET_ORDER, 0);
+
+        foreach ($matches as $match) {
+
+          if (!file_exists(\Drupal::root() . $match[1])) {
+
+            $url = Url::fromRoute('ImageGen.content',
+              [
+                'width' => $imagegen_config->get('width'),
+                'height' => $imagegen_config->get('height'),
+                'bg' => 'random',
+                'color' => 'random',
+                'type' => $imagegen_config->get('type'),
+                'text' => end(explode('/', $match[1])) . "." . $match[2],
+              ],
+              [
+                'absolute' => TRUE,
+              ]
+            );
+            $item['content']['#text'] = str_replace($match[1] . "." . $match[2], $url->toString(), $item['content']['#text']);
+          }
+        }
+      }
+    }
+  }
+}

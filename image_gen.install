@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Treatments during the installation / uninstallation of the module.
+ */
+
+/**
+ * Assigns default parameters during module installation.
+ */
+function image_gen_install() {
+
+  Drupal::configFactory()->getEditable('image_gen.config')
+    ->set('image_field_replace', 0)
+    ->set('processed_text_image_replace', 0)
+    ->set('text', 'ImageGen')
+    ->set('width', 600)
+    ->set('height', 350)
+    ->set('type', 'png')
+    ->set('bg', '#2b2928')
+    ->set('color', '#FFFFFF')
+    ->set('font', 'Western_Bang_Bang.otf')
+    ->save();
+}
+
+/**
+ * Deletes the configuration saved in the module.
+ */
+function image_gen_uninstall() {
+
+  Drupal::configFactory()->getEditable('image_gen.config')->delete();
+
+}

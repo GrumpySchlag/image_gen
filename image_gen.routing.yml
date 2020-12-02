@@ -1,0 +1,25 @@
+# The parameters entered here (_controller:) allow you to assign the default values ​​when a parameter is not given
+ImageGen.content:
+  path: '/image-gen/{width}/{height}/{bg}/{color}/{text}/{type}'
+  defaults:
+    _controller: '\Drupal\image_gen\Controller\ImageGen::generateImage'
+    title: 'ImageGen'
+    width: null
+    height: null
+    type: null
+    bg: null
+    color: null
+    text: null
+  requirements:
+    _permission: 'access image generator'
+
+
+ImageGen.admin_settings_form:
+  path: '/admin/config/image-gen/settings'
+  defaults:
+    _form: '\Drupal\image_gen\Form\ImageGenForm'
+    _title: 'Configuration ImageGen'
+  requirements:
+    _permission: 'access image generator'
+  options:
+    _admin_route: TRUE

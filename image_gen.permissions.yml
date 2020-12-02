@@ -1,0 +1,5 @@
+# Defines access to image_gen module.
+access image generator:
+  title: 'Image gen access'
+  description: "Autorise l'utilisateur à accéder au module Image Generator"
+  restrict access: TRUE

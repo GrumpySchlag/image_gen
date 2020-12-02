@@ -1,0 +1,18 @@
+name: Image Generator
+# version: 1.0
+# project: image_gen
+interface translation project: image_gen
+interface translation server pattern: modules/custom/%project/translations/%project.%language.po
+description: Module permettant de créér des images aléatoires selon certains paramètres.
+package: Custom
+dependencies:
+  - drupal:ckeditor
+type: module
+core: 8.x
+core_version_requirement: ^8 || ^9
+configure: ImageGen.admin_settings_form
+
+# Information added by Drupal.org packaging script on 2020-11-12
+version: '8.x-1.2'
+project: 'image_gen'
+datestamp: 1605174928
